@@ -255,6 +255,36 @@ var illa;
     })();
     illa.Log = Log;
 })(illa || (illa = {}));
+var illa;
+(function (illa) {
+    var StringUtil = (function () {
+        function StringUtil() {
+        }
+        StringUtil.escapeHTML = function (str) {
+            return str.replace(/[&<>"']/g, function (s) {
+                return StringUtil.CHAR_TO_HTML[s];
+            });
+        };
+        StringUtil.castNicely = function (str) {
+            return str == null ? '' : String(str);
+        };
+        StringUtil.trim = function (str) {
+            return str.replace(/^\s+|\s+$/g, '');
+        };
+        StringUtil.escapeRegExp = function (str) {
+            return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        };
+        StringUtil.CHAR_TO_HTML = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;' // IE8 does not support &apos;
+        };
+        return StringUtil;
+    })();
+    illa.StringUtil = StringUtil;
+})(illa || (illa = {}));
 /// <reference path='IAJAXSettingsBeforeSendFunction.ts'/>
 /// <reference path='IAJAXSettingsCompleteFunction.ts'/>
 /// <reference path='IAJAXSettingsContentsObject.ts'/>
@@ -334,16 +364,41 @@ var illa;
 /// <reference path='IXHR.ts'/>
 /// <reference path='../../lib/illa/_module.ts'/>
 /// <reference path='../../lib/illa/Log.ts'/>
+/// <reference path='../../lib/illa/StringUtil.ts'/>
 /// <reference path='../../lib/jQuery.d.ts'/>
+/// <reference path='../BigNumber.d.ts'/>
 var time;
-(function (time) {
+(function (_time) {
     var Main = (function () {
         function Main() {
+            this.epochDate = new Date('0001-01-01T00:00:00Z');
+            this.epochJSTime = new BigNumber(this.epochDate.getTime());
+            BigNumber.config({
+                EXPONENTIAL_AT: 1e+9
+            });
             jQuery(illa.bind(this.onDomLoaded, this));
         }
         Main.prototype.onDomLoaded = function () {
-            illa.Log.info('Hi');
-            jQuery('body').append('Hi');
+            illa.Log.info('The current time is:', this.getNowSplit().slice(0, -1).join(':'));
+            illa.Log.info('The time at 63:560:000:000 is:', this.getDateAt('63:560:000:000').toString());
+        };
+        Main.prototype.getNowJSTime = function () {
+            return new BigNumber(Date.now());
+        };
+        Main.prototype.getNow = function () {
+            return this.getNowJSTime().minus(this.epochJSTime);
+        };
+        Main.prototype.getNowSplit = function () {
+            var now = this.getNow().toString();
+            while (now.length % 3) {
+                now = ' ' + now;
+            }
+            var result = now.match(/(.{3})/g);
+            return result;
+        };
+        Main.prototype.getDateAt = function (time) {
+            time = illa.StringUtil.trim(time.replace(/:/g, ''));
+            return new Date(new BigNumber(time).times(1000).round().plus(this.epochJSTime).toNumber());
         };
         Main.getInstance = function () {
             return this.instance;
@@ -351,5 +406,5 @@ var time;
         Main.instance = new Main();
         return Main;
     })();
-    time.Main = Main;
+    _time.Main = Main;
 })(time || (time = {}));

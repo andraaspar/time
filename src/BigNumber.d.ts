@@ -40,4 +40,116 @@ declare class BigNumber {
 	
 	squareRoot(): BigNumber;
 	sqrt(): BigNumber;
+	
+	isFinite(): boolean;
+	isF(): boolean;
+	
+	isNaN(): boolean;
+	
+	isNegative(): boolean;
+	isNeg(): boolean;
+	
+	isZero(): boolean;
+	isZ(): boolean;
+	
+	comparedTo(n: number, base?: number): number;
+	comparedTo(n: string, base?: number): number;
+	comparedTo(n: BigNumber, base?: number): number;
+	cmp(n: number, base?: number): number;
+	cmp(n: string, base?: number): number;
+	cmp(n: BigNumber, base?: number): number;
+	
+	dividedBy(n: number, base?: number): BigNumber;
+	dividedBy(n: string, base?: number): BigNumber;
+	dividedBy(n: BigNumber, base?: number): BigNumber;
+	div(n: number, base?: number): BigNumber;
+	div(n: string, base?: number): BigNumber;
+	div(n: BigNumber, base?: number): BigNumber;
+	
+	minus(n: number, base?: number): BigNumber;
+	minus(n: string, base?: number): BigNumber;
+	minus(n: BigNumber, base?: number): BigNumber;
+	
+	modulo(n: number, base?: number): BigNumber;
+	modulo(n: string, base?: number): BigNumber;
+	modulo(n: BigNumber, base?: number): BigNumber;
+	mod(n: number, base?: number): BigNumber;
+	mod(n: string, base?: number): BigNumber;
+	mod(n: BigNumber, base?: number): BigNumber;
+	
+	plus(n: number, base?: number): BigNumber;
+	plus(n: string, base?: number): BigNumber;
+	plus(n: BigNumber, base?: number): BigNumber;
+	
+	times(n: number, base?: number): BigNumber;
+	times(n: string, base?: number): BigNumber;
+	times(n: BigNumber, base?: number): BigNumber;
+	
+	toPower(exp: number): BigNumber;
+	pow(exp: number): BigNumber;
+	
+	equals(n: number, base?: number): boolean;
+	equals(n: string, base?: number): boolean;
+	equals(n: BigNumber, base?: number): boolean;
+	eq(n: number, base?: number): boolean;
+	eq(n: string, base?: number): boolean;
+	eq(n: BigNumber, base?: number): boolean;
+	
+	greaterThan(n: number, base?: number): boolean;
+	greaterThan(n: string, base?: number): boolean;
+	greaterThan(n: BigNumber, base?: number): boolean;
+	gt(n: number, base?: number): boolean;
+	gt(n: string, base?: number): boolean;
+	gt(n: BigNumber, base?: number): boolean;
+	
+	greaterThanOrEqualTo(n: number, base?: number): boolean;
+	greaterThanOrEqualTo(n: string, base?: number): boolean;
+	greaterThanOrEqualTo(n: BigNumber, base?: number): boolean;
+	gte(n: number, base?: number): boolean;
+	gte(n: string, base?: number): boolean;
+	gte(n: BigNumber, base?: number): boolean;
+	
+	lessThan(n: number, base?: number): boolean;
+	lessThan(n: string, base?: number): boolean;
+	lessThan(n: BigNumber, base?: number): boolean;
+	lt(n: number, base?: number): boolean;
+	lt(n: string, base?: number): boolean;
+	lt(n: BigNumber, base?: number): boolean;
+	
+	lessThanOrEqualTo(n: number, base?: number): boolean;
+	lessThanOrEqualTo(n: string, base?: number): boolean;
+	lessThanOrEqualTo(n: BigNumber, base?: number): boolean;
+	lte(n: number, base?: number): boolean;
+	lte(n: string, base?: number): boolean;
+	lte(n: BigNumber, base?: number): boolean;
+	
+	toExponential(decimal_places?: number): string;
+	toE(decimal_places?: number): string;
+	
+	toFixed(decimal_places?: number): string;
+	toF(decimal_places?: number): string;
+	
+	toNumber(): number;
+	toN(): number;
+	
+	toPrecision(significant_figures?: number): string;
+	toP(significant_figures?: number): string;
+	
+	toString(base?: number): string;
+	toS(base?: number): string;
+	
+	valueOf(): string;
+	
+	toFraction(max_denominator?: number): string[];
+	toFraction(max_denominator?: string): string[];
+	toFraction(max_denominator?: BigNumber): string[];
+	toFr(max_denominator?: number): string[];
+	toFr(max_denominator?: string): string[];
+	toFr(max_denominator?: BigNumber): string[];
+	
+	round(decimal_places?: number, rounding_mode?: number): BigNumber;
+	
+	c: number[];
+	e: number;
+	s: number;
 }
