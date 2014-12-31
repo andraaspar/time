@@ -1,4 +1,5 @@
 /// <reference path='../widget/Clock.ts'/>
+/// <reference path='../widget/Widget.ts'/>
 
 /// <reference path='MainScreenData.ts'/>
 
@@ -32,8 +33,8 @@ module time.view.screen {
 				this.clock.minuteJq.text(('0' + date.getMinutes()).slice(-2));
 				this.clock.secondJq.text(('0' + date.getSeconds()).slice(-2));
 				
-				this.clock.generationJq.text(('000' + value.generation).slice(-3));
-				this.clock.fortnightJq.text(('000' + value.fortnight).slice(-3));
+				this.clock.generationJq.text(value.generation);
+				this.clock.fortnightJq.text(('000' + value.dozen).slice(-3));
 				this.clock.quarterJq.text(('000' + value.quarter).slice(-3));
 				this.clock.secondJq2.text(('000' + value.seconds).slice(-3));
 			}

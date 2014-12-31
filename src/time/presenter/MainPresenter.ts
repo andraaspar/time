@@ -1,34 +1,23 @@
-/// <reference path='../model/data/Time.ts'/>
+/// <reference path='../model/util/TimeUtil.ts'/>
 /// <reference path='../view/screen/MainScreen.ts'/>
-/// <reference path='../view/screen/MainScreenData.ts'/>
 /// <reference path='../view/widget/Clock.ts'/>
 
 module time.presenter {
 	export class MainPresenter {
 		
-		private time: model.data.Time;
+		private time: model.util.TimeUtil;
 		private mainScreen: view.screen.MainScreen;
 		private onTickBound = illa.bind(this.onTick, this);
 		
 		constructor() {
-			this.time = new model.data.Time();
+			this.time = new model.util.TimeUtil();
 			this.mainScreen = new view.screen.MainScreen(jQuery('body'));
 			
 			this.onTick();
 		}
 		
 		onTick(): void {
-			var nowArray = this.time.getNowArray();
-			while (nowArray.length < 4) {
-				nowArray.unshift('');
-			}
-			var data = new view.screen.MainScreenData();
-			data.time = Date.now();
-			data.generation = nowArray[0];
-			data.fortnight = nowArray[1];
-			data.quarter = nowArray[2];
-			data.seconds = nowArray[3];
-			this.mainScreen.setData(data);
+			this.mainScreen.setData(model.util.TimeUtil.getMainScreenData());
 			
 			window.requestAnimationFrame(this.onTickBound);
 		}
