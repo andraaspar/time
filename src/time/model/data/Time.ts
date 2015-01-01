@@ -4,65 +4,131 @@ module time.model.data {
 	export class Time {
 		
 		private static epochDate = new Date('0001-01-01T00:00:00Z');
-		private static epochJSTime = new BigNumber(Time.epochDate.getTime());
+		private static epochJSSeconds = new BigNumber(Time.epochDate.getTime());
 		
-		private time: BigNumber;
+		private seconds: BigNumber;
 		
-		constructor(time: BigNumber);
-		constructor(time: string);
-		constructor(time: number);
-		constructor(time) {
-			if (time instanceof BigNumber) {
-				this.time = time;
+		constructor(seconds: BigNumber);
+		constructor(seconds: string);
+		constructor(seconds: number);
+		constructor(seconds) {
+			if (seconds instanceof BigNumber) {
+				this.seconds = seconds;
 			} else {
-				if (illa.isString(time)) {
-					time = illa.StringUtil.trim(time.replace(/:/g, ''));
+				if (illa.isString(seconds)) {
+					seconds = illa.StringUtil.trim(seconds.replace(/:/g, ''));
 				}
-				this.time = new BigNumber(time);
+				this.seconds = new BigNumber(seconds);
 			}
 		}
 		
-		getTime() { return this.time }
+		getMilliseconds(round?: boolean): BigNumber {
+			var r = this.seconds.times(1000);
+			if (round) r = r.round(0, BigNumber.ROUND_DOWN);
+			return r;
+		}
+		
+		getMillisecondsNotSeconds(round?: boolean): BigNumber {
+			return this.getMilliseconds(round).mod(1000);
+		}
+		
+		getSeconds(round?: boolean): BigNumber {
+			var r = this.seconds;
+			if (round) r = r.round(0, BigNumber.ROUND_DOWN);
+			return r;
+		}
+		
+		getSecondsNotMinutes(round?: boolean): BigNumber {
+			return this.getSeconds(round).abs().mod(60);
+		}
+		
+		getMinutes(round?: boolean): BigNumber {
+			var r = this.seconds.div(60);
+			if (round) r = r.round(0, BigNumber.ROUND_DOWN);
+			return r;
+		}
+		
+		getMinutesNotHours(round?: boolean): BigNumber {
+			return this.getMinutes(round).abs().mod(60);
+		}
+		
+		getHours(round?: boolean): BigNumber {
+			var r = this.seconds.div(60 * 60);
+			if (round) r = r.round(0, BigNumber.ROUND_DOWN);
+			return r;
+		}
+		
+		getHoursNotDays(round?: boolean): BigNumber {
+			return this.getHours(round).abs().mod(24);
+		}
+		
+		getDays(round?: boolean): BigNumber {
+			var r = this.seconds.div(60 * 60 * 24);
+			if (round) r = r.round(0, BigNumber.ROUND_DOWN);
+			return r;
+		}
 		
 		toDate(): Date {
-			return new Date(this.time.times(1000).plus(Time.epochJSTime).toN());
+			return new Date(this.seconds.times(1000).plus(Time.epochJSSeconds).toN());
 		}
 		
-		getSecondsPart(): number {
-			return this.time.abs().mod(1000).toN();
+		getSecondsNotQuarters(round?: boolean): BigNumber {
+			return this.getSeconds(round).abs().mod(1000);
 		}
 		
-		getQuartersPart(): number {
-			return this.time.abs().div(1000).floor().mod(1000).toN();
+		getQuarters(round?: boolean): BigNumber {
+			var r = this.seconds.div(1000);
+			if (round) r = r.round(0, BigNumber.ROUND_DOWN);
+			return r;
 		}
 		
-		getDozensPart(): number {
-			return this.time.abs().div(1000000).floor().mod(1000).toN();
+		getQuartersNotDozens(round?: boolean): BigNumber {
+			return this.getQuarters(round).abs().mod(1000);
 		}
 		
-		getGenerationsPart(): number {
-			return this.time.div(1000000000).round(0, BigNumber.ROUND_DOWN).toN();
+		getDozens(round?: boolean): BigNumber {
+			var r = this.seconds.div(1000000);
+			if (round) r = r.round(0, BigNumber.ROUND_DOWN);
+			return r;
+		}
+		
+		getDozensNotGenerations(round?: boolean): BigNumber {
+			return this.getDozens(round).abs().mod(1000);
+		}
+		
+		getGenerations(round?: boolean): BigNumber {
+			var r = this.seconds.div(1000000000);
+			if (round) r = r.round(0, BigNumber.ROUND_DOWN);
+			return r;
 		}
 		
 		toString(): string {
 			return [
-				this.getGenerationsPart(),
-				('00' + this.getDozensPart()).slice(-3),
-				('00' + this.getQuartersPart()).slice(-3),
-				('00' + this.getSecondsPart()).slice(-3)
+				this.getGenerations(true),
+				('00' + this.getDozensNotGenerations(true)).slice(-3),
+				('00' + this.getQuartersNotDozens(true)).slice(-3),
+				('00' + this.getSecondsNotQuarters(true)).slice(-3) + '.' + this.getMilliseconds()
 			].join(':');
 		}
 		
+		minus(other: Time): Time {
+			return new Time(this.getSeconds().minus(other.getSeconds()));
+		}
+		
+		plus(other: Time): Time {
+			return new Time(this.getSeconds().plus(other.getSeconds()));
+		}
+		
 		static getNow(): Time {
-			return this.fromJSTime(Date.now());
+			return this.fromJSSeconds(Date.now());
 		}
 		
 		static fromDate(date: Date): Time {
-			return this.fromJSTime(date.getTime());
+			return this.fromJSSeconds(date.getTime());
 		}
 		
-		static fromJSTime(time: number): Time {
-			return new Time(new BigNumber(time).minus(this.epochJSTime).div(1000).round(0, BigNumber.ROUND_DOWN));
+		static fromJSSeconds(seconds: number): Time {
+			return new Time(new BigNumber(seconds).minus(this.epochJSSeconds).div(1000));
 		}
 	}
 }
